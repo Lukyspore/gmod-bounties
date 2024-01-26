@@ -42,17 +42,17 @@ net.Receive("LDT_Bounties_NewBountyPerson", function()
     if not IsValid(ply) then return end
 
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
-        ShowNotification("New bounty on "..ply:Nick().." for "..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMENICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
         return
     elseif LDT_Bounties.ply ~= ply then
-        ShowNotification("New bounty on "..ply:Nick().." for "..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMENICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
         return
     end
 
     if LDT_Bounties.Config.CurrencySymbolLocation then
-        ShowNotification("A new bounty has been placed on you for "..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        ShowNotification(LDT_Bounties.GetLanguange("NewBountySelf")..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
     else
-        ShowNotification("A new bounty has been placed on you for "..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        ShowNotification(LDT_Bounties.GetLanguange("NewBountySelf")..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
     end
 end)
 
@@ -67,17 +67,40 @@ net.Receive("LDT_Bounties_BountyEndedWithoutWinner", function()
     end
 
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
-        ShowNotification("The bounty on "..ply:Nick().." has ended without a winner!", 5)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NoBountyWinner"), "PLYNAME", ply:Nick()), 5)
         return
     elseif LDT_Bounties.ply ~= ply then
-        ShowNotification("The bounty on "..ply:Nick().." has ended without a winner!", 5)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NoBountyWinner"), "PLYNAME", ply:Nick()), 5)
         return
     end
 
     if LDT_Bounties.Config.CurrencySymbolLocation then
-        ShowNotification("The bounty on you has ended and you have won "..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
+        ShowNotification(LDT_Bounties.GetLanguange("NoBountyWinnerSelf")..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
     else
-        ShowNotification("The bounty on you has ended and you have won "..amount..LDT_Bounties.Config.CurrencySymbol.."!", 5)
+        ShowNotification(LDT_Bounties.GetLanguange("NoBountyWinnerSelf")..amount..LDT_Bounties.Config.CurrencySymbol.."!", 5)
+    end
+end)
+
+net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
+    local ply = net.ReadEntity()
+    local winner = net.ReadEntity()
+    local amount = net.ReadInt(32)
+
+    if not IsValid(ply) or not IsValid(winner) then return end
+
+    if IsValid(LDT_Bounties.NotificationPanel) then 
+        LDT_Bounties.NotificationPanel:Remove()
+    end
+
+    local text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "VICTIMENICK", ply:Nick())
+    text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "WINNERNICK", winner:Nick())
+    
+    if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
+        ShowNotification(text..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
+        return
+    elseif LDT_Bounties.ply ~= ply then
+        ShowNotification(text..amount..LDT_Bounties.Config.CurrencySymbol.."!", 5)
+        return
     end
 end)
 

@@ -35,17 +35,36 @@ local function ShowNotification(text, autoHideTime)
     end
 end
 
+local function OpenBountiesUI()
+    if IsValid(LDT_Bounties.bountiesMainPanel) then
+        LDT_Bounties.bountiesMainPanel:Remove()
+    end
+
+    LDT_Bounties.bountiesMainPanel = vgui.Create( "LDTBountiesFrame" )
+    LDT_Bounties.bountiesMainPanel:Center()
+    LDT_Bounties.bountiesMainPanel:MakePopup()
+    LDT_Bounties.bountiesMainPanel:Show()
+end
+
+net.Receive("LDT_Bounties_OpenBountiesUI", function()
+    OpenBountiesUI()
+end)
+
 net.Receive("LDT_Bounties_NewBountyPerson", function()
     local ply = net.ReadEntity()
     local amount = net.ReadInt(32)
 
     if not IsValid(ply) then return end
 
+    if IsValid(LDT_Bounties.NotificationPanel) then 
+        LDT_Bounties.NotificationPanel:Remove()
+    end
+
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMENICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
         return
     elseif LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMENICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
         return
     end
 
@@ -92,8 +111,8 @@ net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
         LDT_Bounties.NotificationPanel:Remove()
     end
 
-    local text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "VICTIMENICK", ply:Nick())
-    text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "WINNERNICK", winner:Nick())
+    local text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "VICTIMNICK", ply:Nick())
+    text = string.Replace(text, "WINNERNICK", winner:Nick())
     
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
         ShowNotification(text..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
@@ -104,11 +123,29 @@ net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
     end
 end)
 
+net.Receive("LDT_Bounties_CurrentBounty", function()
+    local ply = net.ReadEntity()
+    local amount = net.ReadInt(32)
+
+    if not IsValid(ply) then return end
+
+    if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        return
+    elseif LDT_Bounties.ply ~= ply then
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        return
+    end
+end)
+
 function LDT_Bounties.IsPlayerLoadedIn()
 	if IsValid( LocalPlayer() ) then
 		LDT_Bounties.ply = LocalPlayer()
 		
 		hook.Remove( "HUDPaint", "LDT_Bounties.IsPlayerLoadedIn" )
+
+        net.Start("LDT_Bounties_PlayerLoadedIn")
+        net.SendToServer()
 	end
 end
 hook.Add( "HUDPaint", "LDT_Bounties.IsPlayerLoadedIn", LDT_Bounties.IsPlayerLoadedIn )

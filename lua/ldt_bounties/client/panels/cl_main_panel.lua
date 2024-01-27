@@ -50,6 +50,15 @@ function PANEL:CloseButton()
     end
 end
 
+function PANEL:OpenLeaderboardPage(netMessageString, leaderboardType)
+    if IsValid(self.leaderboardsPage) then
+        self.leaderboardsPage:Remove()
+    end
+
+    self.leaderboardsPage = self:Add("LDTLeaderboardPanel")
+    self.leaderboardsPage:SetLeaderboard(netMessageString, leaderboardType)
+end
+
 -- Creates the sidebar
 function PANEL:SideBar()
     if IsValid(self.sidebar) then self.sidebar:Remove() end
@@ -95,7 +104,7 @@ function PANEL:SideBar()
     self.sidebarItems = {}
     surface.SetFont( "WorkSans30" )
 
-    --self:OpenAchievementPage(v)
+    self:OpenLeaderboardPage("LDT_Bounties_OpenClaimed",1)
     self.BountiesCategory = LDT_Bounties.GetLanguange("ClaimedCategoryName")
 
     self.sidebarItems[1] = self.sidebar:Add("DImageButton")
@@ -122,11 +131,7 @@ function PANEL:SideBar()
     self.sidebarItems[1].DoClick = function()
         selectedIcon = 1
 
-        if IsValid(self.achievementPage) then
-            --self.achievementPage:Remove()
-        end
-
-        self:OpenAchievementPage(v)
+        self:OpenLeaderboardPage("LDT_Bounties_OpenClaimed",1)
         self.BountiesCategory = LDT_Bounties.GetLanguange("ClaimedCategoryName")
     end
 
@@ -159,11 +164,7 @@ function PANEL:SideBar()
     self.sidebarItems[2].DoClick = function()
         selectedIcon = 2
 
-        if IsValid(self.achievementPage) then
-            --self.achievementPage:Remove()
-        end
-
-        self:OpenAchievementPage(v)
+        self:OpenLeaderboardPage("LDT_Bounties_OpenSurvived",2)
         self.BountiesCategory = LDT_Bounties.GetLanguange("SurvivedCategoryName")
     end
 

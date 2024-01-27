@@ -9,8 +9,12 @@ LDT_Bounties.Language = {
         BountyWinner = "The bounty on VICTIMNICK has ended and WINNERNICK has won ",
         BountyExists = "A bounty already exists on VICTIMNICK for ",
         ClaimedIcon = "Claimed",
-        ClaimedCategoryName = "Most Claimed Bounties (top 10)"
+        ClaimedCategoryName = "Most Claimed Bounties (top 10)",
         SurvivedIcon = "Survived",
-        SurvivedCategoryName = "Most Survived Bounties (top 10)"
+        SurvivedCategoryName = "Most Survived Bounties (top 10)",
+        ClaimedBountiesText = "Number of claimed bounties: ",
+        SurvivedBountiesText = "Number of survived bounties: ",
+        NoClaimedLeaderboardText = "No one has claimed a bounty yet!",
+        NoSurvivedBountiesText = "No one has survived a bounty yet!"
     },
 }

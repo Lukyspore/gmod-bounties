@@ -4,6 +4,9 @@ util.AddNetworkString("LDT_Bounties_BountyEndedWithWinner")
 util.AddNetworkString("LDT_Bounties_PlayerLoadedIn")
 util.AddNetworkString("LDT_Bounties_CurrentBounty")
 util.AddNetworkString("LDT_Bounties_OpenBountiesUI")
+util.AddNetworkString("LDT_Bounties_OpenClaimed")
+util.AddNetworkString("LDT_Bounties_OpenSurvived")
+util.AddNetworkString("LDT_Bounties_PanelLeaderboardsResponse")
 
 
 -- Reward players using the correct reward framework
@@ -27,6 +30,31 @@ net.Receive("LDT_Bounties_PlayerLoadedIn", function(len, ply)
         net.WriteInt(LDT_Bounties.BountyAmount, 32)
     net.Send(ply)
 end)
+
+net.Receive("LDT_Bounties_OpenClaimed", function(len, ply)
+    LDT_Bounties.GetClaimedBountiesLeaderboard(function(data)
+        net.Start("LDT_Bounties_PanelLeaderboardsResponse")
+            net.WriteUInt(#data, 4)
+            for k, v in ipairs(data) do
+                net.WriteString(v.SteamID)
+                net.WriteUInt(v.ClaimedBounties, 16)
+            end
+        net.Send(ply)
+    end)
+end)
+
+net.Receive("LDT_Bounties_OpenSurvived", function(len, ply)
+    LDT_Bounties.GetSurvivedBountiesLeaderboard(function(data)
+        net.Start("LDT_Bounties_PanelLeaderboardsResponse")
+            net.WriteUInt(#data, 4)
+            for k, v in ipairs(data) do
+                net.WriteString(v.SteamID)
+                net.WriteUInt(v.SurvivedBounties, 16)
+            end
+        net.Send(ply)
+    end)
+end)
+
 
 hook.Add("PH_RoundStart", "LDT_Bounties.RoundStarted", function()
     LDT_Bounties.BountyPerson = nil
@@ -56,13 +84,15 @@ end)
 hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
     timer.Remove("LDT_Bounties.NewBountyTimer")
 
-    if LDT_Bounties.BountyPerson ~= nil and LDT_Bounties.BountyAmount ~= nil then
+    if LDT_Bounties.BountyPerson ~= nil and LDT_Bounties.BountyAmount ~= nil and LDT_Bounties.Config.RewardForSurviving then
+        LDT_Bounties.UpdateSurvivedBounties(LDT_Bounties.BountyPerson)
+
         net.Start("LDT_Bounties_BountyEndedWithoutWinner")
             net.WriteEntity(LDT_Bounties.BountyPerson)
             net.WriteInt(LDT_Bounties.BountyAmount, 32)
         net.Broadcast()
 
-        RewardPlayer(LDT_Bounties.BountyPerson)
+        --RewardPlayer(LDT_Bounties.BountyPerson)
     end
     
     LDT_Bounties.BountyPerson = nil
@@ -76,13 +106,15 @@ hook.Add( "PH_OnPropKilled", "LDT_Bounties.PlayerKilled", function( victim, atta
     if victim:Team() == attacker:Team() then return end
     if LDT_Bounties.BountyPerson == nil or LDT_Bounties.BountyPerson ~= victim then return end
 
+    LDT_Bounties.UpdateClaimedBounties(attacker)
+
     net.Start("LDT_Bounties_BountyEndedWithWinner")
         net.WriteEntity(victim)
         net.WriteEntity(attacker)
         net.WriteInt(LDT_Bounties.BountyAmount, 32)
     net.Broadcast()
 
-    RewardPlayer(attacker)
+    --RewardPlayer(attacker)
 
     LDT_Bounties.BountyPerson = nil
     LDT_Bounties.BountyAmount = nil
@@ -100,6 +132,15 @@ hook.Add( "PlayerDisconnected", "LDT_Bounties.PlayerDisconnected", function(ply)
     LDT_Bounties.BountyPerson = nil
     LDT_Bounties.BountyAmount = nil
 end )
+
+-- Connects the server to the DB
+hook.Add("InitPostEntity", "LDT_Bounties.ServerLoaded", function()
+    if LDT_Bounties.Config.DatabaseMode == "mysqloo" then
+        LDT_Bounties.ConnectToDatabase()
+    end
+
+    LDT_Bounties.CreateDBTables()
+end)
 
 -- This sends the open command to the player
 hook.Add("PlayerSay", "LDT_Bounties.OpenBountiesUI", function( ply, text )

@@ -93,7 +93,7 @@ net.Receive("LDT_Bounties_BountyEndedWithoutWinner", function()
         return
     end
 
-    if LDT_Bounties.Config.CurrencySymbolLocation then
+    if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.Config.RewardForSurviving then
         ShowNotification(LDT_Bounties.GetLanguange("NoBountyWinnerSelf")..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
     else
         ShowNotification(LDT_Bounties.GetLanguange("NoBountyWinnerSelf")..amount..LDT_Bounties.Config.CurrencySymbol.."!", 5)

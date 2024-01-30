@@ -35,6 +35,7 @@ local function ShowNotification(text, autoHideTime)
     end
 end
 
+-- This function opens the bounties UI
 local function OpenBountiesUI()
     if IsValid(LDT_Bounties.bountiesMainPanel) then
         LDT_Bounties.bountiesMainPanel:Remove()
@@ -46,10 +47,12 @@ local function OpenBountiesUI()
     LDT_Bounties.bountiesMainPanel:Show()
 end
 
+-- This network message is received when the player wants to open the bounties UI
 net.Receive("LDT_Bounties_OpenBountiesUI", function()
     OpenBountiesUI()
 end)
 
+-- This network message is received when a new bounty is created
 net.Receive("LDT_Bounties_NewBountyPerson", function()
     local ply = net.ReadEntity()
     local amount = net.ReadInt(32)
@@ -75,6 +78,7 @@ net.Receive("LDT_Bounties_NewBountyPerson", function()
     end
 end)
 
+-- This network message is received when a bounty is ended without a winner
 net.Receive("LDT_Bounties_BountyEndedWithoutWinner", function()
     local ply = net.ReadEntity()
     local amount = net.ReadInt(32)
@@ -100,6 +104,7 @@ net.Receive("LDT_Bounties_BountyEndedWithoutWinner", function()
     end
 end)
 
+-- This network message is received when a bounty is ended with a winner
 net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
     local ply = net.ReadEntity()
     local winner = net.ReadEntity()
@@ -123,6 +128,7 @@ net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
     end
 end)
 
+-- This network message is received when a the player just connected and there is already a bounty active
 net.Receive("LDT_Bounties_CurrentBounty", function()
     local ply = net.ReadEntity()
     local amount = net.ReadInt(32)
@@ -138,6 +144,7 @@ net.Receive("LDT_Bounties_CurrentBounty", function()
     end
 end)
 
+-- this hook is used to check if the player is loaded in and then send a network message to the server
 function LDT_Bounties.IsPlayerLoadedIn()
 	if IsValid( LocalPlayer() ) then
 		LDT_Bounties.ply = LocalPlayer()

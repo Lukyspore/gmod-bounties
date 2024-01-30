@@ -22,6 +22,7 @@ local function RewardPlayer(ply)
     end
 end
 
+-- Sets the bounty on a player with the given amount
 local function SetBounty(ply, amount)
     LDT_Bounties.BountyPerson = ply
     LDT_Bounties.BountyAmount = amount
@@ -32,6 +33,7 @@ local function SetBounty(ply, amount)
     net.Broadcast()
 end
 
+-- This network message is received when a player loads in and asks for the current bounty
 net.Receive("LDT_Bounties_PlayerLoadedIn", function(len, ply)
     if not IsValid(ply) or LDT_Bounties.BountyPerson == nil then return end
 
@@ -41,6 +43,8 @@ net.Receive("LDT_Bounties_PlayerLoadedIn", function(len, ply)
     net.Send(ply)
 end)
 
+
+-- This network message is received when a player opens the claimed bounties leaderboard. The server has to get the data from the DB first and then send it back
 net.Receive("LDT_Bounties_OpenClaimed", function(len, ply)
     LDT_Bounties.GetClaimedBountiesLeaderboard(function(data)
         net.Start("LDT_Bounties_PanelLeaderboardsResponse")
@@ -53,6 +57,7 @@ net.Receive("LDT_Bounties_OpenClaimed", function(len, ply)
     end)
 end)
 
+-- This network message is received when a player opens the survived bounties leaderboard. The server has to get the data from the DB first and then send it back
 net.Receive("LDT_Bounties_OpenSurvived", function(len, ply)
     LDT_Bounties.GetSurvivedBountiesLeaderboard(function(data)
         net.Start("LDT_Bounties_PanelLeaderboardsResponse")
@@ -65,7 +70,7 @@ net.Receive("LDT_Bounties_OpenSurvived", function(len, ply)
     end)
 end)
 
-
+-- This hook is called when a round starts. It will check if a bounty should be set and then set it
 hook.Add("PH_RoundStart", "LDT_Bounties.RoundStarted", function()
     LDT_Bounties.BountyPerson = nil
     LDT_Bounties.BountyAmount = nil
@@ -86,6 +91,7 @@ hook.Add("PH_RoundStart", "LDT_Bounties.RoundStarted", function()
     end )
 end)
 
+-- This hook is called when a round ends. It will check if the reward should be given to the player who survived
 hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
     timer.Remove("LDT_Bounties.NewBountyTimer")
 
@@ -104,6 +110,7 @@ hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
     LDT_Bounties.BountyAmount = nil
 end)
 
+-- This hook is called when a player is killed. It will check if the player who was killed was the bounty and if so, give the reward to the killer
 hook.Add( "PH_OnPropKilled", "LDT_Bounties.PlayerKilled", function( victim, attacker )
     if not IsValid(victim) or not IsValid(attacker) then return end
     if not victim:IsPlayer() or not attacker:IsPlayer() then return end
@@ -125,6 +132,7 @@ hook.Add( "PH_OnPropKilled", "LDT_Bounties.PlayerKilled", function( victim, atta
     LDT_Bounties.BountyAmount = nil
 end )
 
+-- This hook is called when a player disconnects. It will check if the player who disconnected was the bounty and if so, end the bounty
 hook.Add( "PlayerDisconnected", "LDT_Bounties.PlayerDisconnected", function(ply)
     if LDT_Bounties.BountyPerson == nil then return end
     if LDT_Bounties.BountyPerson ~= ply then return end

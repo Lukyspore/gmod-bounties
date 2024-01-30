@@ -5,6 +5,7 @@ function LDT_Bounties.CreateDBTables()
     sql.Query("CREATE TABLE IF NOT EXISTS LDT_Bounties_PlayerStats (ID INTEGER PRIMARY KEY, SteamID TEXT NOT NULL, ClaimedBounties INT NOT NULL, SurvivedBounties INT NOT NULL);")
 end
 
+-- Updates the player's ClaimedBounties by 1
 function LDT_Bounties.UpdateClaimedBounties(ply) 
 	local steamID = ply:SteamID64()
 
@@ -19,6 +20,7 @@ function LDT_Bounties.UpdateClaimedBounties(ply)
     print("[BOUNTIES] Successfully updated ClaimedBounties for "..ply:Nick()..".")
 end
 
+-- Updates the player's SurvivedBounties by 1
 function LDT_Bounties.UpdateSurvivedBounties(ply) 
 	local steamID = ply:SteamID64()
 
@@ -33,6 +35,7 @@ function LDT_Bounties.UpdateSurvivedBounties(ply)
     print("[BOUNTIES] Successfully updated Survived Bounties for "..ply:Nick()..".")
 end
 
+-- Gets the player's SurvivedBounties and calls the callback function with the data
 function LDT_Bounties.GetSurvivedBountiesLeaderboard(callback)
 	local data = sql.Query("Select * from `LDT_Bounties_PlayerStats` where `SurvivedBounties` > 0 order by `SurvivedBounties` desc limit 10;")
 
@@ -43,6 +46,7 @@ function LDT_Bounties.GetSurvivedBountiesLeaderboard(callback)
     end
 end
 
+-- Gets the player's ClaimedBounties and calls the callback function with the data
 function LDT_Bounties.GetClaimedBountiesLeaderboard(callback)
 	local data = sql.Query("Select * from `LDT_Bounties_PlayerStats` where `ClaimedBounties` > 0 order by `ClaimedBounties` desc limit 10;")
 

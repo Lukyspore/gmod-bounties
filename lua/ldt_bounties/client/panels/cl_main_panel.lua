@@ -20,6 +20,7 @@ function PANEL:Init()
     self:CloseButton()
 end
 
+-- Create the top bar
 function PANEL:TopBar() 
     if IsValid(self.topBar) then self.topBar:Remove() end
 
@@ -50,6 +51,7 @@ function PANEL:CloseButton()
     end
 end
 
+-- This function opens the specific leaderboard page
 function PANEL:OpenLeaderboardPage(netMessageString, leaderboardType)
     if IsValid(self.leaderboardsPage) then
         self.leaderboardsPage:Remove()

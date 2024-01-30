@@ -8,6 +8,8 @@ function PANEL:Init()
     self:DockMargin(LDT_Bounties.GetWidth(5), LDT_Bounties.GetHeight(10), LDT_Bounties.GetWidth(5), 0)
 end
 
+-- Set the leaderboard type. And send a net message to the server to get the leaderboard.
+-- 1 = Claimed bounties, 2 = Survived bounties
 function PANEL:SetLeaderboard(netString, leaderboardType)
     self.leaderboardType = leaderboardType
     net.Start(netString)
@@ -31,6 +33,7 @@ function PANEL:CreateBody()
     end
 end
 
+-- Fill the leaderboard with the data from the server.
 function PANEL:FillLeaderboards()
     self.topPlayers = {}
     if #self.playersLeaderboard == 0 then
@@ -92,6 +95,7 @@ end
 function PANEL:Paint(w, h)
 end
 
+-- Receive the data from the server. And create the body.
 net.Receive("LDT_Bounties_PanelLeaderboardsResponse", function()
     local tableCount = net.ReadUInt(4)
     this.playersLeaderboard = {}

@@ -138,21 +138,6 @@ net.Receive("LDT_Bounties_CurrentBounty", function()
     end
 end)
 
-net.Receive("LDT_Bounties_BountyEndedByAdmin", function()
-    local ply = net.ReadEntity()
-
-    if not IsValid(ply) then return end
-
-    if IsValid(LDT_Bounties.NotificationPanel) then 
-        LDT_Bounties.NotificationPanel:Remove()
-    end
-
-    if LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyEndedByAdmin"), "VICTIMNICK", ply:Nick()), 5)
-        return
-    end
-end)
-
 function LDT_Bounties.IsPlayerLoadedIn()
 	if IsValid( LocalPlayer() ) then
 		LDT_Bounties.ply = LocalPlayer()

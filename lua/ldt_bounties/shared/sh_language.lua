@@ -15,7 +15,6 @@ LDT_Bounties.Language = {
         ClaimedBountiesText = "Number of claimed bounties: ",
         SurvivedBountiesText = "Number of survived bounties: ",
         NoClaimedLeaderboardText = "No one has claimed a bounty yet!",
-        NoSurvivedBountiesText = "No one has survived a bounty yet!",
-        BountyEndedByAdmin = "The bounty on VICTIMNICK has been ended by an admin!",
+        NoSurvivedBountiesText = "No one has survived a bounty yet!"
     },
 }

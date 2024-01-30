@@ -7,7 +7,6 @@ util.AddNetworkString("LDT_Bounties_OpenBountiesUI")
 util.AddNetworkString("LDT_Bounties_OpenClaimed")
 util.AddNetworkString("LDT_Bounties_OpenSurvived")
 util.AddNetworkString("LDT_Bounties_PanelLeaderboardsResponse")
-util.AddNetworkString("LDT_Bounties_BountyEndedByAdmin")
 
 
 -- Reward players using the correct reward framework
@@ -151,36 +150,6 @@ end)
 -- This sends the open command to the player
 hook.Add("PlayerSay", "LDT_Bounties.OpenBountiesUI", function( ply, text )
     local lowerText = string.lower(text)
-    local textSplit = string.Split(lowerText, " ")
-
-    if table.HasValue("!bounties", textSplit) then	
-        if not LDT_Bounties.Config.AdminRanks[LDT_Bounties.GetPlayerGroup(ply)] then return end
-
-        if textSplit[2] == "end" then
-            timer.Remove("LDT_Bounties.NewBountyTimer")
-            
-            net.Start("LDT_Bounties_BountyEndedByAdmin")
-                net.WriteEntity(LDT_Bounties.BountyPerson)
-            net.Broadcast()
-
-            LDT_Bounties.BountyPerson = nil
-            LDT_Bounties.BountyAmount = nil
-        elseif textSplit[2] == "set" and #textSplit == 3 then
-            local ply = player.GetBySteamID64(textSplit[3])
-            if not IsValid(ply) then return end
-
-            SetBounty(ply, math.random(LDT_Bounties.Config.BountyMinimum, LDT_Bounties.Config.BountyMaximum))
-        elseif textSplit[2] == "set" and #textSplit == 4 then
-            local ply = player.GetBySteamID64(textSplit[3])
-            if not IsValid(ply) then return end
-
-            local amount = tonumber(textSplit[4])
-            if amount == nil then return end
-
-            SetBounty(ply, amount)
-        end
-    end
-
     if lowerText != string.lower(LDT_Bounties.Config.MenuCommand) then return end
     
     net.Start("LDT_Bounties_OpenBountiesUI")

@@ -3,11 +3,6 @@ LDT_Bounties.Config = LDT_Bounties.Config or {}
 
 LDT_Bounties.Config.Language = "en" -- Currently there are en, pl, fr, da, tr and de translations available.
 
-LDT_Bounties.Config.AdminRanks = {
-    ["superadmin"] = true,
-    ["admin"] = true
-}
-
 LDT_Bounties.Config.MenuCommand = "!bounties" -- This is the command to open the menu.
 
 LDT_Bounties.Config.MinimumPlayers = 1 -- This is the minimum amount of players required to start a bounty.

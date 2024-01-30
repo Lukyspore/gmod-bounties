@@ -43,7 +43,6 @@ function LDT_Bounties.UpdateClaimedBounties(ply)
 
 	local query = LDT_Bounties.DB_BOUNTIES:query("Select * from `LDT_Bounties_PlayerStats` where `SteamID` = '"..steamID.."';")
 	query.onSuccess = function( q, data )
-		print("test")
 		local query1 = nil
 		if #data > 0 then 
 			query1 = LDT_Bounties.DB_BOUNTIES:query("Update `LDT_Bounties_PlayerStats` set `ClaimedBounties` = `ClaimedBounties` + 1 where `SteamID` = '"..steamID.."';")

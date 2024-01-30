@@ -14,7 +14,7 @@ LDT_Bounties.Language = {
         SurvivedCategoryName = "Most Survived Bounties (top 10)",
         ClaimedBountiesText = "Number of claimed bounties: ",
         SurvivedBountiesText = "Number of survived bounties: ",
-        NoClaimedLeaderboardText = "No one has claimed a bounty yet!",
+        NoClaimedBountiesText = "No one has claimed a bounty yet!",
         NoSurvivedBountiesText = "No one has survived a bounty yet!"
     },
 }

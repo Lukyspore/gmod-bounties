@@ -11,8 +11,8 @@ local function ShowNotification(text, autoHideTime)
         local length = draw.SimpleText(text,"WorkSans30", w*0.04, h*0.475, LDT_Bounties.Config.White, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if length > 265 and not ActivatedAnim then 
             ActivatedAnim = true
-            LDT_Bounties.NotificationPanel:SetWide(length+35+w*0.07)
-            LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920-(length+35+w*0.07)), LDT_Bounties.GetHeight(300), 0.3, 0, -1, function(_,self)
+            LDT_Bounties.NotificationPanel:SetWide(length+LDT_Bounties.GetWidth(35)+w*0.07)
+            LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920-(length+LDT_Bounties.GetWidth(35)+w*0.07)), LDT_Bounties.GetHeight(300), 0.3, 0, -1, function(_,self)
                 LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920), LDT_Bounties.GetHeight(300), 0.3, autoHideTime, -1, function(_,self)
                     self:Remove()
                 end)
@@ -33,6 +33,44 @@ local function ShowNotification(text, autoHideTime)
     LDT_Bounties.NotificationPanel.accentBar.Paint = function(me, w, h)
         draw.RoundedBox( 0, 0, 0, w, h, LDT_Bounties.Config.Blue )
     end
+end
+
+-- This function renders the notification
+local function ShowActiveBounty(bountyPerson)
+    if IsValid(LDT_Bounties.BountyPanel) then return end
+    LDT_Bounties.BountyPanel = vgui.Create( "DPanel" )
+    LDT_Bounties.BountyPanel:SetPos(LDT_Bounties.GetWidth(0), LDT_Bounties.GetHeight(850))
+    LDT_Bounties.BountyPanel:SetSize(LDT_Bounties.GetWidth(300), LDT_Bounties.GetHeight(50) )
+
+    local ActivatedAnim = false
+    LDT_Bounties.BountyPanel.Paint = function(me, w, h)
+        draw.RoundedBox( 0, 0, 0, w, h, LDT_Bounties.Config.GreyThird )
+        local length = draw.SimpleText(LDT_Bounties.GetLanguange("CurrentBountyNotify") .. bountyPerson,"WorkSans30", w*0.04, h*0.475, LDT_Bounties.Config.White, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        if length > 265 and not ActivatedAnim then 
+            ActivatedAnim = true
+            LDT_Bounties.BountyPanel:SetWide(length+LDT_Bounties.GetWidth(35)+w*0.07)
+            LDT_Bounties.BountyPanel:MoveTo(0, LDT_Bounties.GetHeight(850), 0.3, 0, -1, function(_,self)
+            end)
+        elseif length <= 265 and not ActivatedAnim then
+            ActivatedAnim = true
+            LDT_Bounties.BountyPanel:MoveTo(0, LDT_Bounties.GetHeight(850), 0.3, 0, -1, function(_,self)
+            end)
+        end
+    end
+
+    LDT_Bounties.BountyPanel.accentBar = vgui.Create( "DPanel",LDT_Bounties.BountyPanel )
+    LDT_Bounties.BountyPanel.accentBar:Dock(RIGHT)
+    LDT_Bounties.BountyPanel.accentBar:SetWide(LDT_Bounties.GetWidth(10))
+    LDT_Bounties.BountyPanel.accentBar.Paint = function(me, w, h)
+        draw.RoundedBox( 0, 0, 0, w, h, LDT_Bounties.Config.Blue )
+    end
+end
+
+local function RemoveActiveBounty()
+    if not IsValid(LDT_Bounties.BountyPanel) then return end
+    LDT_Bounties.BountyPanel:MoveTo(-LDT_Bounties.GetWidth(LDT_Bounties.BountyPanel:GetWide()), LDT_Bounties.GetHeight(850), 0.3, 0, -1, function(_,self)
+        self:Remove()
+    end)
 end
 
 -- This function opens the bounties UI
@@ -59,15 +97,19 @@ net.Receive("LDT_Bounties_NewBountyPerson", function()
 
     if not IsValid(ply) then return end
 
+    local nick = ply:Nick()
+
     if IsValid(LDT_Bounties.NotificationPanel) then 
         LDT_Bounties.NotificationPanel:Remove()
     end
 
+    ShowActiveBounty(nick)
+
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", nick)..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
         return
     elseif LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("NewBounty"), "VICTIMNICK", nick)..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
         return
     end
 
@@ -85,6 +127,8 @@ net.Receive("LDT_Bounties_BountyEndedWithoutWinner", function()
     local type = net.ReadBool()
 
     if not IsValid(ply) then return end
+
+    RemoveActiveBounty()
 
     if IsValid(LDT_Bounties.NotificationPanel) then 
         LDT_Bounties.NotificationPanel:Remove()
@@ -113,6 +157,8 @@ net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
 
     if not IsValid(ply) or not IsValid(winner) then return end
 
+    RemoveActiveBounty()
+
     if IsValid(LDT_Bounties.NotificationPanel) then 
         LDT_Bounties.NotificationPanel:Remove()
     end
@@ -136,11 +182,15 @@ net.Receive("LDT_Bounties_CurrentBounty", function()
 
     if not IsValid(ply) then return end
 
+    local nick = ply:Nick()
+
+    ShowActiveBounty(nick)
+
     if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", ply:Nick())..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", nick)..LDT_Bounties.Config.CurrencySymbol..amount.."!", 15)
         return
     elseif LDT_Bounties.ply ~= ply then
-        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", ply:Nick())..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
+        ShowNotification(string.Replace(LDT_Bounties.GetLanguange("BountyExists"), "VICTIMNICK", nick)..amount..LDT_Bounties.Config.CurrencySymbol.."!", 15)
         return
     end
 end)

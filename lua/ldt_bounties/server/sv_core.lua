@@ -101,6 +101,7 @@ hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
         net.Start("LDT_Bounties_BountyEndedWithoutWinner")
             net.WriteEntity(LDT_Bounties.BountyPerson)
             net.WriteInt(LDT_Bounties.BountyAmount, 32)
+            net.WriteBool(false)
         net.Broadcast()
 
         RewardPlayer(LDT_Bounties.BountyPerson)
@@ -109,6 +110,21 @@ hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
     LDT_Bounties.BountyPerson = nil
     LDT_Bounties.BountyAmount = nil
 end)
+
+hook.Add( "PlayerDeath", "GlobalDeathMessage", function( victim, inflictor, attacker )
+    if victim ~= attacker then return end
+    if LDT_Bounties.BountyPerson == nil then return end
+    if LDT_Bounties.BountyPerson ~= victim then return end
+
+    net.Start("LDT_Bounties_BountyEndedWithoutWinner")
+        net.WriteEntity(LDT_Bounties.BountyPerson)
+        net.WriteInt(LDT_Bounties.BountyAmount, 32)
+        net.WriteBool(true)
+    net.Broadcast()
+
+    LDT_Bounties.BountyPerson = nil
+    LDT_Bounties.BountyAmount = nil
+end )
 
 -- This hook is called when a player is killed. It will check if the player who was killed was the bounty and if so, give the reward to the killer
 hook.Add( "PH_OnPropKilled", "LDT_Bounties.PlayerKilled", function( victim, attacker )
@@ -140,6 +156,7 @@ hook.Add( "PlayerDisconnected", "LDT_Bounties.PlayerDisconnected", function(ply)
     net.Start("LDT_Bounties_BountyEndedWithoutWinner")
         net.WriteEntity(LDT_Bounties.BountyPerson)
         net.WriteInt(LDT_Bounties.BountyAmount, 32)
+        net.WriteBool(true)
     net.Broadcast()
 
     LDT_Bounties.BountyPerson = nil

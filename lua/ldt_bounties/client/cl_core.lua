@@ -12,7 +12,7 @@ local function ShowNotification(text, autoHideTime)
         if length > 265 and not ActivatedAnim then 
             ActivatedAnim = true
             LDT_Bounties.NotificationPanel:SetWide(length+LDT_Bounties.GetWidth(35)+w*0.07)
-            LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920-(length+LDT_Bounties.GetWidth(35)+w*0.07)), LDT_Bounties.GetHeight(300), 0.3, 0, -1, function(_,self)
+            LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920) - (length+LDT_Bounties.GetWidth(35)+w*0.07), LDT_Bounties.GetHeight(300), 0.3, 0, -1, function(_,self)
                 LDT_Bounties.NotificationPanel:MoveTo(LDT_Bounties.GetWidth(1920), LDT_Bounties.GetHeight(300), 0.3, autoHideTime, -1, function(_,self)
                     self:Remove()
                 end)

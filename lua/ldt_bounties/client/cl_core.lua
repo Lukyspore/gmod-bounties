@@ -166,10 +166,10 @@ net.Receive("LDT_Bounties_BountyEndedWithWinner", function()
     local text = string.Replace(LDT_Bounties.GetLanguange("BountyWinner"), "VICTIMNICK", ply:Nick())
     text = string.Replace(text, "WINNERNICK", winner:Nick())
     
-    if LDT_Bounties.Config.CurrencySymbolLocation and LDT_Bounties.ply ~= ply then
+    if LDT_Bounties.Config.CurrencySymbolLocation then
         ShowNotification(text..LDT_Bounties.Config.CurrencySymbol..amount.."!", 5)
         return
-    elseif LDT_Bounties.ply ~= ply then
+    else
         ShowNotification(text..amount..LDT_Bounties.Config.CurrencySymbol.."!", 5)
         return
     end

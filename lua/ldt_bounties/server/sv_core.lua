@@ -104,7 +104,7 @@ hook.Add("PH_RoundEnd", "LDT_Bounties.RoundEnded",function()
             net.WriteBool(false)
         net.Broadcast()
 
-        --RewardPlayer(LDT_Bounties.BountyPerson)
+        RewardPlayer(LDT_Bounties.BountyPerson)
     end
     
     LDT_Bounties.BountyPerson = nil
@@ -142,7 +142,7 @@ hook.Add( "PH_OnPropKilled", "LDT_Bounties.PlayerKilled", function( victim, atta
         net.WriteInt(LDT_Bounties.BountyAmount, 32)
     net.Broadcast()
 
-    --RewardPlayer(attacker)
+    RewardPlayer(attacker)
 
     LDT_Bounties.BountyPerson = nil
     LDT_Bounties.BountyAmount = nil

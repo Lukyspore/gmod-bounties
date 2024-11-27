@@ -9,14 +9,26 @@ Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHun
   - **For Hunters**: Points are awarded for successfully eliminating the bounty prop.
   - **For Props**: If a bounty prop survives the round, they earn the bounty points.
 - **Balanced Gameplay**: Adds a strategic element to the classic PropHunt gamemode without disrupting its core mechanics.
-- **Customizable** (optional): Supports easy configuration for point values and bounty assignment logic (if implemented).
+- **Customizable**: Supports easy configuration for point values.
 
 ## Installation
 
-1. Download the addon from this repository.
-2. Place the extracted folder into your Garry's Mod `addons` directory.
-3. Restart your Garry's Mod server to load the addon.
-4. Configure settings if applicable by editing the configuration file.
+1. **Download the Addon**:
+   - Subscribe to the addon on the Steam Workshop: [PropHunt Bounty System](https://steamcommunity.com/sharedfiles/filedetails/?id=3151849457).
+   - Alternatively, download the files from this repository.
+
+2. **Place in Addons Folder**:
+   - If downloaded manually, place the extracted folder into your Garry's Mod `addons` directory:
+     ```
+     garrysmod/addons/
+     ```
+
+3. **Restart Your Server**:
+   - Restart your Garry's Mod server to load the addon.
+
+4. **Configure Settings**:
+   - Open the addon configuration file `ldt_bounties/sh_config.lua` to adjust point values or other parameters.
+
 
 ## How It Works
 

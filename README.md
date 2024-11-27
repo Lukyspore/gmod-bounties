@@ -29,6 +29,13 @@ Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHun
    - If the bounty target survives until the end of the round, they earn the bounty points.
 4. Scores are updated in real-time, adding an extra layer of competition to the match.
 
+## Showcase Video
+
+Check out a demonstration of the **PropHunt Bounty System Addon** in action on YouTube! Watch how bounties enhance the gameplay experience and add a thrilling competitive edge to PropHunt.
+
+Click [here](https://www.youtube.com/watch?v=qnBBwUbnaY8) to watch the video.
+
+
 ## Commands & Configuration
 
 - **!bounties**: Opens a user-friendly scoreboard.

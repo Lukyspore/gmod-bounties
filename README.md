@@ -1,10 +1,10 @@
 # PropHunt Bounty System Addon
 
-Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHunt gamemode in Garry's Mod by introducing a dynamic bounty system. The addon adds a layer of excitement and competition by assigning bounties to random prop players at the start of each round. Hunters are rewarded for eliminating bounty props, while surviving bounty props earn rewards for their cunning evasion.
+Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHunt gamemode in Garry's Mod by introducing a dynamic bounty system. The addon adds a layer of excitement and competition by assigning bounties to random prop players at the start of each round. Hunters are rewarded for eliminating bounty props while surviving bounty props earn rewards for their cunning evasion.
 
 ## Features
 
-- **Dynamic Bounties**: At the beginning of each round, a random prop player is assigned a bounty.
+- **Dynamic Bounties**: A random prop player is assigned a bounty at the beginning of each round.
 - **Point Rewards**:
   - **For Hunters**: Points are awarded for successfully eliminating the bounty prop.
   - **For Props**: If a bounty prop survives the round, they earn the bounty points.
@@ -31,7 +31,7 @@ Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHun
 
 ## Commands & Configuration
 
-- **!bounties**: 
+- **!bounties**: Opens a user-friendly scoreboard.
 
 ## Requirements
 

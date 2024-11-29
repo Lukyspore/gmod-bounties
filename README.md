@@ -14,7 +14,7 @@ Welcome to the **PropHunt Bounty System Addon**! This addon enhances the PropHun
 ## Installation
 
 1. **Download the Addon**:
-   - Subscribe to the addon on the Steam Workshop: [PropHunt Bounty System](https://steamcommunity.com/sharedfiles/filedetails/?id=3151849457).
+   - Subscribe to the addon on the Steam Workshop: [PropHunt Bounty System](https://steamcommunity.com/sharedfiles/filedetails/?id=3373551367).
    - Alternatively, download the files from this repository.
 
 2. **Place in Addons Folder**:
